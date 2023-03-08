@@ -3,12 +3,14 @@ package com.ovesdu.ovesdu_server.datasource.entities;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
+import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.GenerationType.AUTO;
 
 @Entity(name = "_tokens")
@@ -21,6 +23,9 @@ public class TokensEntity {
     private Long id;
     private String accessToken;
     private String refreshToken;
+
+    @ManyToOne(fetch = EAGER)
+    private UserEntity user;
 
     @Override
     public boolean equals(Object o) {

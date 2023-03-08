@@ -19,13 +19,12 @@ public class UserEntity {
     @GeneratedValue(strategy = AUTO)
     private Long id;
     private String username;
-    private String password;
     private String phoneNumber;
     private String email;
+    private String displayName;
+    private String password;
     @ManyToMany(fetch = EAGER)
     private Collection<RoleEntity> roles = new ArrayList<>();
-    @OneToMany(fetch = EAGER)
-    private Collection<TokensEntity> tokens = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
@@ -34,16 +33,16 @@ public class UserEntity {
         UserEntity userEntity = (UserEntity) o;
         return Objects.equals(id, userEntity.id) &&
                 Objects.equals(username, userEntity.username) &&
-                Objects.equals(password, userEntity.password) &&
                 Objects.equals(phoneNumber, userEntity.phoneNumber) &&
                 Objects.equals(email, userEntity.email) &&
-                Objects.equals(tokens, userEntity.tokens) &&
+                Objects.equals(displayName, userEntity.displayName) &&
+                Objects.equals(password, userEntity.password) &&
                 Objects.equals(roles, userEntity.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, phoneNumber, password, email, tokens, roles);
+        return Objects.hash(id, username, phoneNumber, email, displayName, password, roles);
     }
 
 }
