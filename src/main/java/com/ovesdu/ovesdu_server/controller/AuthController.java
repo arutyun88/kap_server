@@ -1,5 +1,6 @@
 package com.ovesdu.ovesdu_server.controller;
 
+import com.ovesdu.ovesdu_server.config.AppResponse;
 import com.ovesdu.ovesdu_server.config.security.filters.DeviceHeaderFilter;
 import com.ovesdu.ovesdu_server.config.security.filters.LocaleHeaderFilter;
 import com.ovesdu.ovesdu_server.service.UserService;
@@ -23,6 +24,6 @@ public class AuthController {
             @PathVariable String usernameOrEmailOrPhoneNumber
     ) {
         String displayName = userService.getDisplayName(usernameOrEmailOrPhoneNumber);
-        return ResponseEntity.ok().body(displayName);
+        return AppResponse.ok(displayName);
     }
 }
