@@ -1,6 +1,7 @@
 package com.ovesdu.ovesdu_server.config.security;
 
-import com.ovesdu.ovesdu_server.config.security.filters.HeaderFilter;
+import com.ovesdu.ovesdu_server.config.security.filters.DeviceHeaderFilter;
+import com.ovesdu.ovesdu_server.config.security.filters.LocaleHeaderFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,7 +17,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(
             HttpSecurity http
     ) throws Exception {
-        http.addFilterBefore(new HeaderFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new LocaleHeaderFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new DeviceHeaderFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
