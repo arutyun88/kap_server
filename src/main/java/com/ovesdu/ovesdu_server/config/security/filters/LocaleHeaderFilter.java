@@ -18,7 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 public class LocaleHeaderFilter extends OncePerRequestFilter {
-    public static final String LOCALE_PROPERTY = "app-locale";
+    public static final String APP_LOCALE = "app-locale";
 
     @Override
     protected void doFilterInternal(
@@ -26,7 +26,7 @@ public class LocaleHeaderFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        String localeHeader = request.getHeader(LOCALE_PROPERTY);
+        String localeHeader = request.getHeader(APP_LOCALE);
         if (localeHeader == null || localeHeader.isEmpty()) {
             _error(response);
         } else {

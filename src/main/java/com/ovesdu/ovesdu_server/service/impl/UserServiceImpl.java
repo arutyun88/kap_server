@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
     final UserRepository userRepository;
 
     @Override
-    public void getDisplayName(String value) {
+    public String getDisplayName(String value) {
         final UserEntity user;
         if (value.startsWith("+")) {
             user = userRepository.findByPhoneNumber(value);
@@ -26,6 +26,6 @@ public class UserServiceImpl implements UserService {
             user = userRepository.findByUsername(value);
         }
         // TODO return mapped UserInfoDTO
-        log.info(user.getDisplayName());
+        return user.getDisplayName();
     }
 }

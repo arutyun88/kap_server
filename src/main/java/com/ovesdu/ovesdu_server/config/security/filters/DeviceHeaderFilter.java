@@ -29,7 +29,7 @@ public class DeviceHeaderFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String deviceType = request.getHeader(DEVICE_TYPE);
         String deviceId = request.getHeader(DEVICE_ID);
-        if (request.getServletPath().equals("/api/users")) {
+        if (request.getServletPath().startsWith("/api/auth/info")) {
             if (deviceType == null || deviceType.isEmpty()) {
                 _error(response, "device-type in the header is required");
             } else if (deviceId == null || deviceId.isEmpty()) {
