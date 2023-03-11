@@ -2,10 +2,7 @@ package com.ovesdu.ovesdu_server.config;
 
 import com.ovesdu.ovesdu_server.datasource.entities.enums.LocalizedResponseMessageKey;
 import com.ovesdu.ovesdu_server.dto.ResponseWrapper;
-import com.ovesdu.ovesdu_server.exceptions.BadRequestException;
-import com.ovesdu.ovesdu_server.exceptions.ForbiddenException;
-import com.ovesdu.ovesdu_server.exceptions.NotFoundException;
-import com.ovesdu.ovesdu_server.exceptions.UnauthorizedException;
+import com.ovesdu.ovesdu_server.exceptions.*;
 import com.ovesdu.ovesdu_server.service.LocalizedResponseMessageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +35,8 @@ public abstract class AppResponse {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseWrapper(null, message));
         } else if (exception.getClass().equals(NotFoundException.class)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseWrapper(null, message));
+        }  else if (exception.getClass().equals(AlreadyExistException.class)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseWrapper(null, message));
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper(null, message));
         }

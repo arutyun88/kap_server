@@ -17,6 +17,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(
             HttpSecurity http
     ) throws Exception {
+        http.csrf().disable();
         http.addFilterBefore(new LocaleHeaderFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new DeviceHeaderFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();

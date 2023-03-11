@@ -10,7 +10,10 @@ public enum LocalizedResponseMessageKey {
     DEVICE_INFORMATION_IS_NOT_VALID("device information is not valid"),
     USER_NOT_FOUND("User not found"),
     RESOURCE_NOT_FOUND("Resource not found"),
-    UNKNOWN_ERROR("Unknown error");
+    UNKNOWN_ERROR("Unknown error"),
+    USERNAME_ALREADY_EXIST("Username already exist"),
+    EMAIL_ALREADY_EXIST("Email already exist"),
+    PHONE_NUMBER_ALREADY_EXIST("Phone number already exist");
 
     public final String defaultValue;
 

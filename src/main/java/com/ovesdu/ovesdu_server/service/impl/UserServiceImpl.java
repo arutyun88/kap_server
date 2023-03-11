@@ -6,6 +6,8 @@ import com.ovesdu.ovesdu_server.datasource.entities.enums.DeviceOs;
 import com.ovesdu.ovesdu_server.datasource.entities.enums.LocalizedResponseMessageKey;
 import com.ovesdu.ovesdu_server.datasource.local.DeviceRepository;
 import com.ovesdu.ovesdu_server.datasource.local.UserRepository;
+import com.ovesdu.ovesdu_server.dto.UserDto;
+import com.ovesdu.ovesdu_server.exceptions.AlreadyExistException;
 import com.ovesdu.ovesdu_server.exceptions.NotFoundException;
 import com.ovesdu.ovesdu_server.service.UserService;
 import lombok.AllArgsConstructor;
@@ -45,5 +47,22 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new NotFoundException(LocalizedResponseMessageKey.USER_NOT_FOUND.name());
         }
+    }
+
+    @Override
+    public UserDto createUser(UserEntity user) throws AlreadyExistException {
+
+        UserEntity fUserEntity = userRepository.findByUsername(user.getUsername());
+        if (fUserEntity != null)
+            throw new AlreadyExistException(LocalizedResponseMessageKey.USERNAME_ALREADY_EXIST.name());
+        fUserEntity = userRepository.findByEmail(user.getEmail());
+        if (fUserEntity != null)
+            throw new AlreadyExistException(LocalizedResponseMessageKey.EMAIL_ALREADY_EXIST.name());
+        fUserEntity = userRepository.findByPhoneNumber(user.getPhoneNumber());
+        if (fUserEntity != null)
+            throw new AlreadyExistException(LocalizedResponseMessageKey.PHONE_NUMBER_ALREADY_EXIST.name());
+
+        final UserEntity entity = userRepository.save(user);
+        return UserDto.mapByEntity(entity);
     }
 }
