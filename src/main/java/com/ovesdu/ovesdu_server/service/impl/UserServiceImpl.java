@@ -2,6 +2,7 @@ package com.ovesdu.ovesdu_server.service.impl;
 
 import com.ovesdu.ovesdu_server.datasource.entities.UserEntity;
 import com.ovesdu.ovesdu_server.datasource.local.UserRepository;
+import com.ovesdu.ovesdu_server.exceptions.NotFoundException;
 import com.ovesdu.ovesdu_server.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ public class UserServiceImpl implements UserService {
     final UserRepository userRepository;
 
     @Override
-    public String getDisplayName(String value) {
+    public String getDisplayName(String value) throws NotFoundException {
         final UserEntity user;
         if (value.startsWith("+")) {
             user = userRepository.findByPhoneNumber(value);
@@ -26,6 +27,10 @@ public class UserServiceImpl implements UserService {
             user = userRepository.findByUsername(value);
         }
         // TODO return mapped UserInfoDTO
-        return user.getDisplayName();
+        if (user != null) {
+            return user.getDisplayName();
+        } else {
+            throw new NotFoundException("User not found");
+        }
     }
 }
