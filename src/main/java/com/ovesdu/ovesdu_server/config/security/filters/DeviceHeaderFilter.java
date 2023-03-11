@@ -1,5 +1,6 @@
 package com.ovesdu.ovesdu_server.config.security.filters;
 
+import com.ovesdu.ovesdu_server.datasource.entities.DeviceEntity;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import java.io.IOException;
 public class DeviceHeaderFilter extends OncePerRequestFilter {
     public static final String DEVICE_TYPE = "device-type";
     public static final String DEVICE_ID = "device-id";
+    public static final String DEVICE_OS = "device-os";
     public static final String APP_LOCALE = "app-locale";
 
     @Override
@@ -24,12 +26,17 @@ public class DeviceHeaderFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String deviceType = request.getHeader(DEVICE_TYPE);
         String deviceId = request.getHeader(DEVICE_ID);
+        String deviceOs = request.getHeader(DEVICE_OS);
         String appLocale = request.getHeader(APP_LOCALE);
         if (request.getServletPath().startsWith("/api/auth/info")) {
             if (deviceType == null || deviceType.isEmpty()) {
                 FilterHelper.error(response, "device-type in the header is required", appLocale);
             } else if (deviceId == null || deviceId.isEmpty()) {
                 FilterHelper.error(response, "device-id in the header is required", appLocale);
+            } else if (deviceOs == null || deviceOs.isEmpty()) {
+                FilterHelper.error(response, "device-os in the header is required", appLocale);
+            } else if (!DeviceEntity.validate(deviceId, deviceType, deviceOs)) {
+                FilterHelper.error(response, "device information is not valid", appLocale);
             } else {
                 filterChain.doFilter(request, response);
             }

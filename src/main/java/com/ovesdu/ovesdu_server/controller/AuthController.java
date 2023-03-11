@@ -22,6 +22,7 @@ public class AuthController {
             @RequestHeader(LocaleHeaderFilter.APP_LOCALE) String locale,
             @RequestHeader(DeviceHeaderFilter.DEVICE_TYPE) String deviceType,
             @RequestHeader(DeviceHeaderFilter.DEVICE_ID) String deviceId,
+            @RequestHeader(DeviceHeaderFilter.DEVICE_OS) String deviceOs,
             @PathVariable String usernameOrEmailOrPhoneNumber
     ) {
         try {
