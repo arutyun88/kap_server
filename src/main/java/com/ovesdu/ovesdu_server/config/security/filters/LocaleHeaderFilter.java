@@ -1,5 +1,6 @@
 package com.ovesdu.ovesdu_server.config.security.filters;
 
+import com.ovesdu.ovesdu_server.datasource.entities.enums.LocalizedResponseMessageKey;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ public class LocaleHeaderFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String localeHeader = request.getHeader(APP_LOCALE);
         if (localeHeader == null || localeHeader.isEmpty()) {
-            FilterHelper.error(response, "app-locale in the header is required", "en");
+            FilterHelper.error(response, LocalizedResponseMessageKey.APP_LOCALE_HEADER_REQUIRED, "en");
         } else {
             filterChain.doFilter(request, response);
         }

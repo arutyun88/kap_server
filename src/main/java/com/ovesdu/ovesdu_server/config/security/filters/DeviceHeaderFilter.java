@@ -11,6 +11,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.ovesdu.ovesdu_server.datasource.entities.enums.LocalizedResponseMessageKey.*;
+
 @Slf4j
 public class DeviceHeaderFilter extends OncePerRequestFilter {
     public static final String DEVICE_TYPE = "device-type";
@@ -30,13 +32,13 @@ public class DeviceHeaderFilter extends OncePerRequestFilter {
         String appLocale = request.getHeader(APP_LOCALE);
         if (request.getServletPath().startsWith("/api/auth/info")) {
             if (deviceType == null || deviceType.isEmpty()) {
-                FilterHelper.error(response, "device-type in the header is required", appLocale);
+                FilterHelper.error(response, DEVICE_TYPE_HEADER_REQUIRED, appLocale);
             } else if (deviceId == null || deviceId.isEmpty()) {
-                FilterHelper.error(response, "device-id in the header is required", appLocale);
+                FilterHelper.error(response, DEVICE_ID_HEADER_REQUIRED, appLocale);
             } else if (deviceOs == null || deviceOs.isEmpty()) {
-                FilterHelper.error(response, "device-os in the header is required", appLocale);
+                FilterHelper.error(response, DEVICE_OS_HEADER_REQUIRED, appLocale);
             } else if (!DeviceEntity.validate(deviceId, deviceType, deviceOs)) {
-                FilterHelper.error(response, "device information is not valid", appLocale);
+                FilterHelper.error(response, DEVICE_INFORMATION_IS_NOT_VALID, appLocale);
             } else {
                 filterChain.doFilter(request, response);
             }

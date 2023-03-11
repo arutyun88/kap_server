@@ -3,6 +3,7 @@ package com.ovesdu.ovesdu_server.service.impl;
 import com.ovesdu.ovesdu_server.datasource.entities.DeviceEntity;
 import com.ovesdu.ovesdu_server.datasource.entities.UserEntity;
 import com.ovesdu.ovesdu_server.datasource.entities.enums.DeviceOs;
+import com.ovesdu.ovesdu_server.datasource.entities.enums.LocalizedResponseMessageKey;
 import com.ovesdu.ovesdu_server.datasource.local.DeviceRepository;
 import com.ovesdu.ovesdu_server.datasource.local.UserRepository;
 import com.ovesdu.ovesdu_server.exceptions.NotFoundException;
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService {
                 return value;
             }
         } else {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException(LocalizedResponseMessageKey.USER_NOT_FOUND.name());
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.ovesdu.ovesdu_server.config;
 
 import com.ovesdu.ovesdu_server.dto.ResponseWrapper;
+import com.ovesdu.ovesdu_server.service.LocalizedResponseMessageService;
+import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -11,10 +13,15 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import static com.ovesdu.ovesdu_server.datasource.entities.enums.LocalizedResponseMessageKey.*;
+
 
 @EnableWebMvc
 @RestControllerAdvice
+@AllArgsConstructor
 public class ExceptionResolver extends ResponseEntityExceptionHandler {
+    public final LocalizedResponseMessageService localizedResponseMessageService;
+
     public static final String APP_LOCALE = "app-locale";
 
     @Override
@@ -27,11 +34,13 @@ public class ExceptionResolver extends ResponseEntityExceptionHandler {
     ) {
         final String locale = request.getHeader(APP_LOCALE);
         ResponseWrapper responseWrapper;
+        final String message;
         if (ex.getClass().equals(NoHandlerFoundException.class)) {
-            responseWrapper = new ResponseWrapper(null, "Resource not found");
+            message = localizedResponseMessageService.find(RESOURCE_NOT_FOUND, locale);
         } else {
-            responseWrapper = new ResponseWrapper(null, "Unknown error");
+            message = localizedResponseMessageService.find(UNKNOWN_ERROR, locale);
         }
+        responseWrapper = new ResponseWrapper(null, message);
         return ResponseEntity
                 .status(statusCode)
                 .headers(headers)
