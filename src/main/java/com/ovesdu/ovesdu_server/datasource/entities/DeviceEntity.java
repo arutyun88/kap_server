@@ -28,6 +28,7 @@ public class DeviceEntity {
             String deviceType,
             String deviceOs
     ) {
-        return !deviceId.isEmpty() && DeviceType.contains(deviceType) && DeviceOs.contains(deviceOs);
+        final DeviceType type = DeviceType.getByName(deviceType);
+        return !deviceId.isEmpty() && DeviceOs.validate(deviceOs, type);
     }
 }

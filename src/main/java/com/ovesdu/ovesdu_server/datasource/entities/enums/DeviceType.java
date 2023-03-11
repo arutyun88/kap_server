@@ -11,12 +11,12 @@ public enum DeviceType {
         this.name = name;
     }
 
-    public static boolean contains(String name) {
+    public static DeviceType getByName(String name) {
         for (DeviceType type : DeviceType.values()) {
             if (type.name.equals(name)) {
-                return true;
+                return type;
             }
         }
-        return false;
+        return null;
     }
 }

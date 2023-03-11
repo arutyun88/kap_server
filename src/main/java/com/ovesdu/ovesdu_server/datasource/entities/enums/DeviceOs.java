@@ -11,10 +11,25 @@ public enum DeviceOs {
         this.name = name;
     }
 
-    public static boolean contains(String name) {
-        for (DeviceOs type : DeviceOs.values()) {
-            if (type.name.equals(name)) {
-                return true;
+    public static DeviceOs getByName(String name) {
+        for (DeviceOs os : DeviceOs.values()) {
+            if (os.name.equals(name)) {
+                return os;
+            }
+        }
+        return null;
+    }
+
+    public static boolean validate(String name, DeviceType type) {
+        final DeviceOs os = getByName(name);
+        if (os != null && type != null) {
+            switch (type) {
+                case TABLET, MOBILE -> {
+                    return os == DeviceOs.IOS || os == DeviceOs.ANDROID;
+                }
+                case DESKTOP -> {
+                    return os == DeviceOs.WEB;
+                }
             }
         }
         return false;
