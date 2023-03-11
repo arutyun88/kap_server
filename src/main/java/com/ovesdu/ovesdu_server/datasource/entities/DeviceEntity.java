@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.GenerationType.AUTO;
@@ -14,7 +15,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DeviceEntity {
+public class DeviceEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = AUTO)
@@ -29,6 +30,7 @@ public class DeviceEntity {
     private String deviceId;
 
     @ManyToOne(fetch = EAGER)
+    @Setter
     private UserEntity user;
 
     public static boolean validate(

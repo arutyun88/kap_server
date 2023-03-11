@@ -13,7 +13,8 @@ public enum LocalizedResponseMessageKey {
     UNKNOWN_ERROR("Unknown error"),
     USERNAME_ALREADY_EXIST("Username already exist"),
     EMAIL_ALREADY_EXIST("Email already exist"),
-    PHONE_NUMBER_ALREADY_EXIST("Phone number already exist");
+    PHONE_NUMBER_ALREADY_EXIST("Phone number already exist"),
+    DEVICE_ALREADY_EXIST("Device already exist");
 
     public final String defaultValue;
 

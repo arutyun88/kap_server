@@ -6,7 +6,7 @@ import com.ovesdu.ovesdu_server.datasource.entities.enums.DeviceOs;
 import com.ovesdu.ovesdu_server.datasource.entities.enums.LocalizedResponseMessageKey;
 import com.ovesdu.ovesdu_server.datasource.local.DeviceRepository;
 import com.ovesdu.ovesdu_server.datasource.local.UserRepository;
-import com.ovesdu.ovesdu_server.dto.UserDto;
+import com.ovesdu.ovesdu_server.dto.TokensDto;
 import com.ovesdu.ovesdu_server.exceptions.AlreadyExistException;
 import com.ovesdu.ovesdu_server.exceptions.NotFoundException;
 import com.ovesdu.ovesdu_server.service.UserService;
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto createUser(UserEntity user) throws AlreadyExistException {
+    public TokensDto createUser(UserEntity user, DeviceEntity device) throws AlreadyExistException {
 
         UserEntity fUserEntity = userRepository.findByUsername(user.getUsername());
         if (fUserEntity != null)
@@ -62,7 +62,14 @@ public class UserServiceImpl implements UserService {
         if (fUserEntity != null)
             throw new AlreadyExistException(LocalizedResponseMessageKey.PHONE_NUMBER_ALREADY_EXIST.name());
 
+        DeviceEntity fDeviceEntity = deviceRepository.findByDeviceId(device.getDeviceId());
+        if (fDeviceEntity != null)
+            throw new AlreadyExistException(LocalizedResponseMessageKey.DEVICE_ALREADY_EXIST.name());
+
         final UserEntity entity = userRepository.save(user);
-        return UserDto.mapByEntity(entity);
+        device.setUser(entity);
+        deviceRepository.save(device);
+
+        return new TokensDto("access", "refresh");
     }
 }

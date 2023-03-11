@@ -1,14 +1,9 @@
 package com.ovesdu.ovesdu_server.datasource.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.Objects;
 
 import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.GenerationType.AUTO;
@@ -17,7 +12,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TokensEntity {
+public class TokensEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
@@ -27,18 +22,6 @@ public class TokensEntity {
     @ManyToOne(fetch = EAGER)
     private UserEntity user;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TokensEntity tokensEntity = (TokensEntity) o;
-        return Objects.equals(id, tokensEntity.id) &&
-                Objects.equals(accessToken, tokensEntity.accessToken) &&
-                Objects.equals(refreshToken, tokensEntity.refreshToken);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, accessToken, refreshToken);
-    }
+    @ManyToOne(fetch = EAGER)
+    private DeviceEntity device;
 }

@@ -16,7 +16,9 @@ public abstract class BaseEntity {
 
     @Column(updatable = false, nullable = false)
     @CreationTimestamp
-    private Date created;
+    private Date createdAt;
     @UpdateTimestamp
-    private Date updated;
+    private Date updatedAt;
+    private Date deletedAt;
+    private boolean deleted;
 }
