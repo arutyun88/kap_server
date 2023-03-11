@@ -1,6 +1,9 @@
 package com.ovesdu.ovesdu_server.service.impl;
 
+import com.ovesdu.ovesdu_server.datasource.entities.DeviceEntity;
 import com.ovesdu.ovesdu_server.datasource.entities.UserEntity;
+import com.ovesdu.ovesdu_server.datasource.entities.enums.DeviceOs;
+import com.ovesdu.ovesdu_server.datasource.local.DeviceRepository;
 import com.ovesdu.ovesdu_server.datasource.local.UserRepository;
 import com.ovesdu.ovesdu_server.exceptions.NotFoundException;
 import com.ovesdu.ovesdu_server.service.UserService;
@@ -15,9 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class UserServiceImpl implements UserService {
     final UserRepository userRepository;
+    final DeviceRepository deviceRepository;
 
     @Override
-    public String getDisplayName(String value) throws NotFoundException {
+    public String getDisplayName(
+            String value,
+            String deviceOs,
+            String deviceId
+    ) throws NotFoundException {
         final UserEntity user;
         if (value.startsWith("+")) {
             user = userRepository.findByPhoneNumber(value);
@@ -26,9 +34,13 @@ public class UserServiceImpl implements UserService {
         } else {
             user = userRepository.findByUsername(value);
         }
-        // TODO return mapped UserInfoDTO
         if (user != null) {
-            return user.getDisplayName();
+            if (DeviceOs.getByName(deviceOs) != DeviceOs.WEB) {
+                final DeviceEntity device = deviceRepository.findByDeviceId(deviceId);
+                return device != null && device.getUser() == user ? user.getDisplayName() : value;
+            } else {
+                return value;
+            }
         } else {
             throw new NotFoundException("User not found");
         }

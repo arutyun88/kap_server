@@ -20,13 +20,16 @@ public class AuthController {
     @GetMapping("/info/{usernameOrEmailOrPhoneNumber}")
     public ResponseEntity<ResponseWrapper> getDisplayName(
             @RequestHeader(LocaleHeaderFilter.APP_LOCALE) String locale,
-            @RequestHeader(DeviceHeaderFilter.DEVICE_TYPE) String deviceType,
             @RequestHeader(DeviceHeaderFilter.DEVICE_ID) String deviceId,
             @RequestHeader(DeviceHeaderFilter.DEVICE_OS) String deviceOs,
             @PathVariable String usernameOrEmailOrPhoneNumber
     ) {
         try {
-            String displayName = userService.getDisplayName(usernameOrEmailOrPhoneNumber);
+            String displayName = userService.getDisplayName(
+                    usernameOrEmailOrPhoneNumber,
+                    deviceOs,
+                    deviceId
+            );
             return AppResponse.ok(displayName, locale);
         } catch (Exception exception) {
             return AppResponse.error(exception, locale);

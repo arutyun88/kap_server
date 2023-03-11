@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.GenerationType.AUTO;
 
 @Entity(name = "_device")
@@ -14,14 +15,21 @@ import static jakarta.persistence.GenerationType.AUTO;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeviceEntity {
+
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
-    @Enumerated(EnumType.ORDINAL)
+
+    @Enumerated(EnumType.STRING)
     private DeviceType deviceType;
-    @Enumerated(EnumType.ORDINAL)
+
+    @Enumerated(EnumType.STRING)
     private DeviceOs deviceOs;
+
     private String deviceId;
+
+    @ManyToOne(fetch = EAGER)
+    private UserEntity user;
 
     public static boolean validate(
             String deviceId,
