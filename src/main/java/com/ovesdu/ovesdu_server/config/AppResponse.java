@@ -10,19 +10,19 @@ import org.springframework.http.ResponseEntity;
 
 public abstract class AppResponse {
 
-    public static ResponseEntity<ResponseWrapper> ok(Object data) {
+    public static ResponseEntity<ResponseWrapper> ok(Object data, String locale) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseWrapper(data, "Success")
         );
     }
 
-    public static ResponseEntity<ResponseWrapper> created(Object data) {
+    public static ResponseEntity<ResponseWrapper> created(Object data, String locale) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new ResponseWrapper(data, "Created")
         );
     }
 
-    public static ResponseEntity<ResponseWrapper> error(Exception exception) {
+    public static ResponseEntity<ResponseWrapper> error(Exception exception, String locale) {
         if (exception.getClass().equals(BadRequestException.class)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new ResponseWrapper(null, exception.getMessage())

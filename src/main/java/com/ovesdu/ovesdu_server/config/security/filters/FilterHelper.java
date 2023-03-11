@@ -12,8 +12,8 @@ import java.io.IOException;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class FilterHelper {
-    static void error(HttpServletResponse response, String message) throws IOException {
-        ResponseEntity<ResponseWrapper> resource = AppResponse.error(new BadRequestException(message));
+    static void error(HttpServletResponse response, String message, String locale) throws IOException {
+        ResponseEntity<ResponseWrapper> resource = AppResponse.error(new BadRequestException(message), locale);
         response.setStatus(resource.getStatusCode().value());
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), resource.getBody());

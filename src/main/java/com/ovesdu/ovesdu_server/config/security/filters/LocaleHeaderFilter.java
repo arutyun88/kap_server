@@ -22,7 +22,7 @@ public class LocaleHeaderFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String localeHeader = request.getHeader(APP_LOCALE);
         if (localeHeader == null || localeHeader.isEmpty()) {
-            FilterHelper.error(response, "app-locale in the header is required");
+            FilterHelper.error(response, "app-locale in the header is required", "en");
         } else {
             filterChain.doFilter(request, response);
         }

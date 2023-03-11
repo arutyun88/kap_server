@@ -14,6 +14,7 @@ import java.io.IOException;
 public class DeviceHeaderFilter extends OncePerRequestFilter {
     public static final String DEVICE_TYPE = "device-type";
     public static final String DEVICE_ID = "device-id";
+    public static final String APP_LOCALE = "app-locale";
 
     @Override
     protected void doFilterInternal(
@@ -23,11 +24,12 @@ public class DeviceHeaderFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String deviceType = request.getHeader(DEVICE_TYPE);
         String deviceId = request.getHeader(DEVICE_ID);
+        String appLocale = request.getHeader(APP_LOCALE);
         if (request.getServletPath().startsWith("/api/auth/info")) {
             if (deviceType == null || deviceType.isEmpty()) {
-                FilterHelper.error(response, "device-type in the header is required");
+                FilterHelper.error(response, "device-type in the header is required", appLocale);
             } else if (deviceId == null || deviceId.isEmpty()) {
-                FilterHelper.error(response, "device-id in the header is required");
+                FilterHelper.error(response, "device-id in the header is required", appLocale);
             } else {
                 filterChain.doFilter(request, response);
             }
