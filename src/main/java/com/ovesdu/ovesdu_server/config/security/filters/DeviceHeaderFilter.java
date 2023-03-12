@@ -11,7 +11,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.ovesdu.ovesdu_server.datasource.entities.enums.LocalizedResponseMessageKey.*;
+import static com.ovesdu.ovesdu_server.config.consts.LocalizedResponseMessageKey.*;
 
 @Slf4j
 public class DeviceHeaderFilter extends OncePerRequestFilter {

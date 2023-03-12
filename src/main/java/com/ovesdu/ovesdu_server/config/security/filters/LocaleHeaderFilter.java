@@ -1,6 +1,6 @@
 package com.ovesdu.ovesdu_server.config.security.filters;
 
-import com.ovesdu.ovesdu_server.datasource.entities.enums.LocalizedResponseMessageKey;
+import com.ovesdu.ovesdu_server.config.consts.LocalizedResponseMessageKey;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

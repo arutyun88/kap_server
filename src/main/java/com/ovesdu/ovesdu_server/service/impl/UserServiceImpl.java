@@ -1,12 +1,17 @@
 package com.ovesdu.ovesdu_server.service.impl;
 
 import com.ovesdu.ovesdu_server.datasource.entities.DeviceEntity;
+import com.ovesdu.ovesdu_server.datasource.entities.RoleEntity;
+import com.ovesdu.ovesdu_server.datasource.entities.TokensEntity;
 import com.ovesdu.ovesdu_server.datasource.entities.UserEntity;
 import com.ovesdu.ovesdu_server.datasource.entities.enums.DeviceOs;
-import com.ovesdu.ovesdu_server.datasource.entities.enums.LocalizedResponseMessageKey;
+import com.ovesdu.ovesdu_server.config.consts.LocalizedResponseMessageKey;
+import com.ovesdu.ovesdu_server.config.consts.Role;
 import com.ovesdu.ovesdu_server.datasource.local.DeviceRepository;
+import com.ovesdu.ovesdu_server.datasource.local.RoleRepository;
+import com.ovesdu.ovesdu_server.datasource.local.TokensRepository;
 import com.ovesdu.ovesdu_server.datasource.local.UserRepository;
-import com.ovesdu.ovesdu_server.dto.TokensDto;
+import com.ovesdu.ovesdu_server.dto.*;
 import com.ovesdu.ovesdu_server.exceptions.AlreadyExistException;
 import com.ovesdu.ovesdu_server.exceptions.NotFoundException;
 import com.ovesdu.ovesdu_server.service.UserService;
@@ -20,8 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Slf4j
 public class UserServiceImpl implements UserService {
-    final UserRepository userRepository;
-    final DeviceRepository deviceRepository;
+    private final RoleRepository roleRepository;
+    private final TokensRepository tokensRepository;
+    private final UserRepository userRepository;
+    private final DeviceRepository deviceRepository;
 
     @Override
     public String getDisplayName(
@@ -50,26 +57,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokensDto createUser(UserEntity user, DeviceEntity device) throws AlreadyExistException {
+    public TokensDto createUser(
+            UserCreateDto userCreateDto
+    ) throws AlreadyExistException {
 
-        UserEntity fUserEntity = userRepository.findByUsername(user.getUsername());
+        UserEntity fUserEntity = userRepository.findByUsername(userCreateDto.getUser().getUsername());
         if (fUserEntity != null)
             throw new AlreadyExistException(LocalizedResponseMessageKey.USERNAME_ALREADY_EXIST.name());
-        fUserEntity = userRepository.findByEmail(user.getEmail());
+        fUserEntity = userRepository.findByEmail(userCreateDto.getUser().getEmail());
         if (fUserEntity != null)
             throw new AlreadyExistException(LocalizedResponseMessageKey.EMAIL_ALREADY_EXIST.name());
-        fUserEntity = userRepository.findByPhoneNumber(user.getPhoneNumber());
+        fUserEntity = userRepository.findByPhoneNumber(userCreateDto.getUser().getPhoneNumber());
         if (fUserEntity != null)
             throw new AlreadyExistException(LocalizedResponseMessageKey.PHONE_NUMBER_ALREADY_EXIST.name());
 
-        DeviceEntity fDeviceEntity = deviceRepository.findByDeviceId(device.getDeviceId());
+        DeviceEntity fDeviceEntity = deviceRepository.findByDeviceId(userCreateDto.getDevice().getDeviceId());
         if (fDeviceEntity != null)
             throw new AlreadyExistException(LocalizedResponseMessageKey.DEVICE_ALREADY_EXIST.name());
 
-        final UserEntity entity = userRepository.save(user);
-        device.setUser(entity);
-        deviceRepository.save(device);
+        final RoleEntity roleUser = roleRepository.findByName(Role.ROLE_USER.name());
+        final UserEntity user = userCreateDto.getUser().toEntity(roleUser);
+        final UserEntity createdUser = userRepository.save(user);
 
-        return new TokensDto("access", "refresh");
+        final DeviceEntity device = userCreateDto.getDevice().toEntity(createdUser);
+        device.setUser(createdUser);
+        final DeviceEntity createdDevice = deviceRepository.save(device);
+
+        final TokensEntity createdTokens = tokensRepository.save(
+                new TokensEntity(
+                        null,
+                        "created_access_token",
+                        "created_refresh_token",
+                        createdUser,
+                        createdDevice
+                )
+        );
+
+        return new TokensDto(createdTokens.getAccessToken(), createdTokens.getRefreshToken());
     }
 }

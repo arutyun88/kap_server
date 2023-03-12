@@ -13,7 +13,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import static com.ovesdu.ovesdu_server.datasource.entities.enums.LocalizedResponseMessageKey.*;
+import static com.ovesdu.ovesdu_server.config.consts.LocalizedResponseMessageKey.*;
 
 
 @EnableWebMvc

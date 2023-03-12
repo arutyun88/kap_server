@@ -1,6 +1,6 @@
 package com.ovesdu.ovesdu_server.datasource.entities;
 
-import com.ovesdu.ovesdu_server.datasource.entities.enums.LocalizedResponseMessageKey;
+import com.ovesdu.ovesdu_server.config.consts.LocalizedResponseMessageKey;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

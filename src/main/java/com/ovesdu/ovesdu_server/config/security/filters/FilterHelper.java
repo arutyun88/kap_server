@@ -2,7 +2,7 @@ package com.ovesdu.ovesdu_server.config.security.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ovesdu.ovesdu_server.config.AppResponse;
-import com.ovesdu.ovesdu_server.datasource.entities.enums.LocalizedResponseMessageKey;
+import com.ovesdu.ovesdu_server.config.consts.LocalizedResponseMessageKey;
 import com.ovesdu.ovesdu_server.dto.ResponseWrapper;
 import com.ovesdu.ovesdu_server.exceptions.BadRequestException;
 import jakarta.servlet.http.HttpServletResponse;

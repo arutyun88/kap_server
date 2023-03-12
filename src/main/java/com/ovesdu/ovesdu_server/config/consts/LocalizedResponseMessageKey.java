@@ -1,4 +1,4 @@
-package com.ovesdu.ovesdu_server.datasource.entities.enums;
+package com.ovesdu.ovesdu_server.config.consts;
 
 public enum LocalizedResponseMessageKey {
     SUCCESS("Success"),
@@ -14,7 +14,8 @@ public enum LocalizedResponseMessageKey {
     USERNAME_ALREADY_EXIST("Username already exist"),
     EMAIL_ALREADY_EXIST("Email already exist"),
     PHONE_NUMBER_ALREADY_EXIST("Phone number already exist"),
-    DEVICE_ALREADY_EXIST("Device already exist");
+    DEVICE_ALREADY_EXIST("Device already exist"),
+    USER_REGISTERED("The user is registered");
 
     public final String defaultValue;
 

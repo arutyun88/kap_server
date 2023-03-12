@@ -1,7 +1,7 @@
 package com.ovesdu.ovesdu_server.service.impl;
 
 import com.ovesdu.ovesdu_server.datasource.entities.LocalizedResponseMessageEntity;
-import com.ovesdu.ovesdu_server.datasource.entities.enums.LocalizedResponseMessageKey;
+import com.ovesdu.ovesdu_server.config.consts.LocalizedResponseMessageKey;
 import com.ovesdu.ovesdu_server.datasource.local.LocalizedResponseMessageRepository;
 import com.ovesdu.ovesdu_server.service.LocalizedResponseMessageService;
 import lombok.AllArgsConstructor;
