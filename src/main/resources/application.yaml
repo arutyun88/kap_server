@@ -7,6 +7,7 @@ spring:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:6401/db_ovesdu_server}
     username: ${DATABASE_USERNAME:admin}
     password: ${DATABASE_PASSWORD:root}
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: create
@@ -17,3 +18,7 @@ spring:
         format_sql: true
         jdbc:
           time_zone: UTC
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+app:
+  secret-key: ${SECRET_KEY}
