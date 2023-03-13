@@ -1,5 +1,6 @@
 package com.ovesdu.ovesdu_server.service.impl;
 
+import com.ovesdu.ovesdu_server.config.security.JwtService;
 import com.ovesdu.ovesdu_server.datasource.entities.DeviceEntity;
 import com.ovesdu.ovesdu_server.datasource.entities.RoleEntity;
 import com.ovesdu.ovesdu_server.datasource.entities.TokensEntity;
@@ -16,19 +17,20 @@ import com.ovesdu.ovesdu_server.exceptions.AlreadyExistException;
 import com.ovesdu.ovesdu_server.exceptions.NotFoundException;
 import com.ovesdu.ovesdu_server.service.UserService;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
 @Transactional
-@Slf4j
 public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final TokensRepository tokensRepository;
     private final UserRepository userRepository;
     private final DeviceRepository deviceRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     @Override
     public String getDisplayName(
@@ -77,22 +79,39 @@ public class UserServiceImpl implements UserService {
 
         final RoleEntity roleUser = roleRepository.findByName(Role.ROLE_USER.name());
         final UserEntity user = userCreateDto.getUser().toEntity(roleUser);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         final UserEntity createdUser = userRepository.save(user);
 
         final DeviceEntity device = userCreateDto.getDevice().toEntity(createdUser);
         device.setUser(createdUser);
         final DeviceEntity createdDevice = deviceRepository.save(device);
 
-        final TokensEntity createdTokens = tokensRepository.save(
+        final TokensEntity tokens = jwtService.generateToken(createdUser);
+
+        tokensRepository.save(
                 new TokensEntity(
                         null,
-                        "created_access_token",
-                        "created_refresh_token",
+                        tokens.getAccessToken(),
+                        tokens.getRefreshToken(),
                         createdUser,
                         createdDevice
                 )
         );
 
-        return new TokensDto(createdTokens.getAccessToken(), createdTokens.getRefreshToken());
+        return new TokensDto(tokens.getAccessToken(), tokens.getRefreshToken());
+    }
+
+    @Override
+    public TokensDto authUser(
+            String username,
+            String password
+    ) throws NotFoundException {
+        UserEntity fUserEntity = userRepository.findByUsername(username);
+        if (fUserEntity == null) {
+            throw new NotFoundException(LocalizedResponseMessageKey.USER_NOT_FOUND.name());
+        }
+        passwordEncoder.matches(password, fUserEntity.getPassword());
+        final TokensEntity tokens = jwtService.generateToken(fUserEntity);
+        return new TokensDto(tokens.getAccessToken(), tokens.getRefreshToken());
     }
 }

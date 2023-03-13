@@ -14,4 +14,6 @@ public interface UserService {
     TokensDto createUser(
             UserCreateDto userCreateDto
     ) throws AlreadyExistException;
+
+    TokensDto authUser(String username, String password) throws NotFoundException;
 }
