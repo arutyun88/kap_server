@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -16,9 +16,9 @@ public abstract class BaseEntity {
 
     @Column(updatable = false, nullable = false)
     @CreationTimestamp
-    private Date createdAt;
+    private Instant createdAt;
     @UpdateTimestamp
-    private Date updatedAt;
-    private Date deletedAt;
+    private Instant updatedAt;
+    private Instant deletedAt;
     private boolean deleted;
 }
