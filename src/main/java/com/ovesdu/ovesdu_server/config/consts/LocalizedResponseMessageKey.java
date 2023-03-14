@@ -17,7 +17,10 @@ public enum LocalizedResponseMessageKey {
     DEVICE_ALREADY_EXIST("Device already exist"),
     USER_REGISTERED("The user is registered"),
     TOKEN_INVALID("The token is invalid"),
-    TOKEN_NOT_VALID("The token is not valid");
+    TOKEN_NOT_VALID("The token is not valid"),
+    ROLE_NOT_FOUND("Role not found"),
+    USER_ALREADY_CONTAINS_ROLE("User already contains role"),
+    NO_ACCESS_RIGHT("No access right");
 
     public final String defaultValue;
 

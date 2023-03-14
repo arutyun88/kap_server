@@ -51,9 +51,10 @@ public abstract class AppResponse {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseWrapper(null, message));
         } else if (exception.getClass().equals(ForbiddenException.class)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseWrapper(null, message));
-        } else if (exception.getClass().equals(NotFoundException.class)) {
+        } else if (exception.getClass().equals(NotFoundException.class) ||
+                exception.getClass().equals(UserNotFoundException.class)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseWrapper(null, message));
-        }  else if (exception.getClass().equals(AlreadyExistException.class)) {
+        } else if (exception.getClass().equals(AlreadyExistException.class)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseWrapper(null, message));
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseWrapper(null, message));

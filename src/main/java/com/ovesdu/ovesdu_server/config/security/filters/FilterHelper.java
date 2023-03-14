@@ -6,6 +6,7 @@ import com.ovesdu.ovesdu_server.config.consts.LocalizedResponseMessageKey;
 import com.ovesdu.ovesdu_server.dto.ResponseWrapper;
 import com.ovesdu.ovesdu_server.exceptions.BadRequestException;
 import com.ovesdu.ovesdu_server.exceptions.ForbiddenException;
+import com.ovesdu.ovesdu_server.exceptions.UserNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,17 @@ public abstract class FilterHelper {
             String locale
     ) throws IOException {
         ResponseEntity<ResponseWrapper> resource = AppResponse.error(new ForbiddenException(key.name()), locale);
+        response.setStatus(resource.getStatusCode().value());
+        response.setContentType(APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getOutputStream(), resource.getBody());
+    }
+
+    public static void notFound(
+            HttpServletResponse response,
+            LocalizedResponseMessageKey key,
+            String locale
+    ) throws IOException {
+        ResponseEntity<ResponseWrapper> resource = AppResponse.error(new UserNotFoundException(key.name()), locale);
         response.setStatus(resource.getStatusCode().value());
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), resource.getBody());
