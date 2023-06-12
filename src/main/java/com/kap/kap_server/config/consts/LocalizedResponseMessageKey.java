@@ -9,6 +9,7 @@ public enum LocalizedResponseMessageKey {
     DEVICE_OS_HEADER_REQUIRED("device-os in the header is required"),
     DEVICE_INFORMATION_IS_NOT_VALID("device information is not valid"),
     USER_NOT_FOUND("User not found"),
+    INVALID_USERNAME_OR_PASSWORD("Invalid username or password"),
     RESOURCE_NOT_FOUND("Resource not found"),
     UNKNOWN_ERROR("Unknown error"),
     USERNAME_ALREADY_EXIST("Username already exist"),

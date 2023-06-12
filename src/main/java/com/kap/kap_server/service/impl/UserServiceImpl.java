@@ -2,22 +2,20 @@ package com.kap.kap_server.service.impl;
 
 import com.kap.kap_server.config.consts.LocalizedResponseMessageKey;
 import com.kap.kap_server.config.consts.Role;
-import com.kap.kap_server.datasource.entities.RoleEntity;
-import com.kap.kap_server.datasource.entities.TokensEntity;
-import com.kap.kap_server.datasource.entities.UserEntity;
-import com.kap.kap_server.datasource.local.DeviceRepository;
-import com.kap.kap_server.datasource.local.RoleRepository;
-import com.kap.kap_server.datasource.local.TokensRepository;
-import com.kap.kap_server.datasource.local.UserRepository;
+import com.kap.kap_server.datasource.entities.*;
+import com.kap.kap_server.datasource.local.*;
 import com.kap.kap_server.dto.TokensDto;
 import com.kap.kap_server.dto.UserCreateDto;
 import com.kap.kap_server.exceptions.AlreadyExistException;
 import com.kap.kap_server.exceptions.NotFoundException;
+import com.kap.kap_server.exceptions.UnauthorizedException;
+import com.kap.kap_server.service.DeviceService;
+import com.kap.kap_server.service.TokensService;
 import com.kap.kap_server.service.UserService;
 import com.kap.kap_server.config.security.JwtService;
-import com.kap.kap_server.datasource.entities.DeviceEntity;
 import com.kap.kap_server.datasource.entities.enums.DeviceOs;
 import com.kap.kap_server.dto.*;
+import com.kap.kap_server.service.VisitsService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,6 +30,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final DeviceRepository deviceRepository;
     private final PasswordEncoder passwordEncoder;
+    private final VisitsService visitsService;
+    private final TokensService tokensService;
+    private final DeviceService deviceService;
     private final JwtService jwtService;
 
     @Override
@@ -104,16 +105,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokensDto authUser(
-            String username,
-            String password
-    ) throws NotFoundException {
-        UserEntity fUserEntity = userRepository.findByUsername(username);
+    public TokensDto signIn(UserSignInDto userSignInDto) throws UnauthorizedException, AlreadyExistException {
+        final var fUserEntity = userRepository.findByUsername(userSignInDto.getUsername());
         if (fUserEntity == null) {
-            throw new NotFoundException(LocalizedResponseMessageKey.USER_NOT_FOUND.name());
+            throw new UnauthorizedException(LocalizedResponseMessageKey.INVALID_USERNAME_OR_PASSWORD.name());
         }
-        passwordEncoder.matches(password, fUserEntity.getPassword());
-        final TokensEntity tokens = jwtService.generateToken(fUserEntity);
-        return new TokensDto(tokens.getAccessToken(), tokens.getRefreshToken());
+        final var mPassword = passwordEncoder.matches(userSignInDto.getPassword(), fUserEntity.getPassword());
+        if (!mPassword) {
+            throw new UnauthorizedException(LocalizedResponseMessageKey.INVALID_USERNAME_OR_PASSWORD.name());
+        }
+
+        final var uDeviceEntity = deviceService.updateDevice(userSignInDto.getDevice(), fUserEntity);
+        final var uTokens = tokensService.updateTokens(uDeviceEntity, fUserEntity);
+        visitsService.updateVisit(fUserEntity);
+
+        return new TokensDto(uTokens.getAccessToken(), uTokens.getRefreshToken());
     }
 }

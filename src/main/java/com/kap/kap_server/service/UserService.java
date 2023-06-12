@@ -5,6 +5,7 @@ import com.kap.kap_server.dto.UserCreateDto;
 import com.kap.kap_server.exceptions.AlreadyExistException;
 import com.kap.kap_server.dto.*;
 import com.kap.kap_server.exceptions.NotFoundException;
+import com.kap.kap_server.exceptions.UnauthorizedException;
 
 public interface UserService {
     String getDisplayName(
@@ -17,5 +18,5 @@ public interface UserService {
             UserCreateDto userCreateDto
     ) throws AlreadyExistException;
 
-    TokensDto authUser(String username, String password) throws NotFoundException;
+    TokensDto signIn(UserSignInDto userSignInDto) throws UnauthorizedException, AlreadyExistException;
 }
