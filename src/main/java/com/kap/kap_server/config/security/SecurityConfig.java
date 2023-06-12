@@ -1,7 +1,7 @@
 package com.kap.kap_server.config.security;
 
 import com.kap.kap_server.config.consts.Role;
-import com.kap.kap_server.config.security.filters.AuthHeadersFilter;
+import com.kap.kap_server.config.security.filters.LocaleHeaderFilter;
 import com.kap.kap_server.config.security.filters.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final LocaleHeaderFilter localeHeaderFilter;
-    private final DeviceHeaderFilter deviceHeaderFilter;
     private final JwtAuthenticationFilter jwtAuthFilter;
 
     @Bean
@@ -29,15 +28,12 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(PATH_AUTH + "/**").permitAll()
-                .requestMatchers(PATH_ADMIN + "/**")
-                        .hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_OWNER.name())
-                .requestMatchers(PATH_MANAGE + "/**")
-                        .hasAnyAuthority(Role.ROLE_MANAGER.name(), Role.ROLE_OWNER.name())
+                .requestMatchers(PATH_ADMIN + "/**").hasAnyAuthority(Role.ROLE_ADMIN.name(), Role.ROLE_OWNER.name())
+                .requestMatchers(PATH_MANAGE + "/**").hasAnyAuthority(Role.ROLE_MANAGER.name(), Role.ROLE_OWNER.name())
                 .requestMatchers(PATH_ROLES + "/**").hasAnyAuthority(Role.ROLE_OWNER.name())
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(localeHeaderFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(deviceHeaderFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

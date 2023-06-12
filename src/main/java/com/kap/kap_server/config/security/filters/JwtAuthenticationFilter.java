@@ -1,17 +1,12 @@
 package com.kap.kap_server.config.security.filters;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.kap.kap_server.config.consts.Headers;
-import com.kap.kap_server.config.consts.LocalizedResponseMessageKey;
-import com.kap.kap_server.config.consts.Paths;
-import com.kap.kap_server.config.consts.Role;
 import com.kap.kap_server.config.security.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,8 +19,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.ovesdu.ovesdu_server.config.consts.Headers.*;
-import static com.ovesdu.ovesdu_server.config.consts.Paths.*;
+import static com.kap.kap_server.config.consts.Headers.*;
+import static com.kap.kap_server.config.consts.LocalizedResponseMessageKey.*;
+import static com.kap.kap_server.config.consts.Paths.*;
+import static com.kap.kap_server.config.consts.Role.*;
 
 @Component
 @RequiredArgsConstructor
@@ -50,9 +47,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final String username = jwtService.extractUsername(token);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-                if(userDetails != null) {
+                if (userDetails != null) {
                     if (!checkRoles(userDetails, request.getServletPath())) {
-                        FilterHelper.forbidden(response, LocalizedResponseMessageKey.NO_ACCESS_RIGHT, locale);
+                        FilterHelper.forbidden(response, NO_ACCESS_RIGHT, locale);
                         return;
                     }
                     if (jwtService.isTokenValid(token, userDetails) && jwtService.isAccessToken(token)) {
@@ -64,19 +61,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     } else {
-                        FilterHelper.forbidden(response, LocalizedResponseMessageKey.TOKEN_NOT_VALID, locale);
+                        FilterHelper.forbidden(response, TOKEN_NOT_VALID, locale);
                         return;
                     }
                 } else {
-                    FilterHelper.notFound(response, LocalizedResponseMessageKey.USER_NOT_FOUND, locale);
+                    FilterHelper.notFound(response, USER_NOT_FOUND, locale);
                     return;
                 }
             }
             filterChain.doFilter(request, response);
         } catch (JWTVerificationException e) {
-            FilterHelper.forbidden(response, LocalizedResponseMessageKey.TOKEN_INVALID, locale);
+            FilterHelper.forbidden(response, TOKEN_INVALID, locale);
         } catch (Exception e) {
-            FilterHelper.forbidden(response, LocalizedResponseMessageKey.UNKNOWN_ERROR, locale);
+            FilterHelper.forbidden(response, UNKNOWN_ERROR, locale);
         }
 
     }
@@ -86,10 +83,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return true;
         }
         var roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        return (path.startsWith(PATH_ADMIN) && roles.contains(Role.ROLE_ADMIN.name()))
-                || (path.startsWith(PATH_ADMIN) && roles.contains(Role.ROLE_OWNER.name()))
-                || (path.startsWith(PATH_MANAGE) && roles.contains(Role.ROLE_MANAGER.name()))
-                || (path.startsWith(PATH_MANAGE) && roles.contains(Role.ROLE_OWNER.name()))
-                || (path.startsWith(PATH_ROLES) && roles.contains(Role.ROLE_OWNER.name()));
+        return (path.startsWith(PATH_ADMIN) && roles.contains(ROLE_ADMIN.name()))
+                || (path.startsWith(PATH_ADMIN) && roles.contains(ROLE_OWNER.name()))
+                || (path.startsWith(PATH_MANAGE) && roles.contains(ROLE_MANAGER.name()))
+                || (path.startsWith(PATH_MANAGE) && roles.contains(ROLE_OWNER.name()))
+                || (path.startsWith(PATH_ROLES) && roles.contains(ROLE_OWNER.name()));
     }
 }
