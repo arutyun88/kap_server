@@ -33,12 +33,7 @@ public class DeviceEntity extends BaseEntity {
     @Setter
     private UserEntity user;
 
-    public static boolean validate(
-            String deviceId,
-            String deviceType,
-            String deviceOs
-    ) {
-        final DeviceType type = DeviceType.getByName(deviceType);
-        return !deviceId.isEmpty() && DeviceOs.validate(deviceOs, type);
+    public static boolean validate(String deviceId, String deviceType, String deviceOs) {
+        return !deviceId.isEmpty() && DeviceOs.validate(deviceOs, DeviceType.getByName(deviceType));
     }
 }

@@ -14,12 +14,9 @@ public enum DeviceOs {
     }
 
     public static DeviceOs getByName(String name) {
-        for (DeviceOs os : DeviceOs.values()) {
-            if (os.name.equals(name)) {
-                return os;
-            }
-        }
-        return null;
+        return Arrays.stream(DeviceOs.values()).
+                filter(deviceOs -> deviceOs.name.equals(name)).
+                findFirst().orElse(null);
     }
 
     public static boolean validate(String name, DeviceType type) {

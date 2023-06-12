@@ -19,8 +19,9 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtService {
     private final Algorithm algorithm;
-    private final String CLAIM_TOKEN_TYPE_KEY = "token_type";
-    private final String CLAIM_TOKEN_TYPE_ACCESS = "access_token";
+    private final static String CLAIM_TOKEN_TYPE_KEY = "token_type";
+    private final static String CLAIM_TOKEN_TYPE_ACCESS = "access_token";
+    private final static String CLAIM_TOKEN_TYPE_REFRESH = "refresh_token";
 
     public String extractUsername(String token) throws JWTVerificationException {
         return decode(token).getSubject();
@@ -40,7 +41,7 @@ public class JwtService {
                 .sign(algorithm);
         final String refreshToken = JWT.create()
                 .withSubject(userDetails.getUsername())
-                .withClaim(CLAIM_TOKEN_TYPE_KEY, "refresh_token")
+                .withClaim(CLAIM_TOKEN_TYPE_KEY, CLAIM_TOKEN_TYPE_REFRESH)
                 .withExpiresAt(new Date(System.currentTimeMillis() + HOUR * 24 * 7))
                 .withIssuedAt(new Date(System.currentTimeMillis()))
                 .sign(algorithm);

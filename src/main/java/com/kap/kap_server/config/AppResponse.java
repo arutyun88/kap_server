@@ -4,11 +4,8 @@ import com.kap.kap_server.config.consts.LocalizedResponseMessageKey;
 import com.kap.kap_server.exceptions.*;
 import com.kap.kap_server.service.LocalizedResponseMessageService;
 import com.kap.kap_server.dto.ResponseWrapper;
-import com.kap.kap_server.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import static com.ovesdu.ovesdu_server.config.consts.LocalizedResponseMessageKey.*;
 
 public abstract class AppResponse {
     final static LocalizedResponseMessageService localizedResponseMessageService =
@@ -18,7 +15,15 @@ public abstract class AppResponse {
             Object data,
             String locale
     ) {
-        final String message = localizedResponseMessageService.find(SUCCESS, locale);
+        return ok(data, locale, LocalizedResponseMessageKey.SUCCESS);
+    }
+
+    public static ResponseEntity<ResponseWrapper> ok(
+            Object data,
+            String locale,
+            LocalizedResponseMessageKey messageKey
+    ) {
+        final String message = localizedResponseMessageService.find(messageKey, locale);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseWrapper(data, message));
     }
 
@@ -26,8 +31,7 @@ public abstract class AppResponse {
             Object data,
             String locale
     ) {
-        final String message = localizedResponseMessageService.find(CREATED, locale);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseWrapper(data, message));
+        return created(data, locale, LocalizedResponseMessageKey.CREATED);
     }
 
     public static ResponseEntity<ResponseWrapper> created(

@@ -1,6 +1,5 @@
 package com.kap.kap_server.config;
 
-import com.kap.kap_server.config.consts.LocalizedResponseMessageKey;
 import com.kap.kap_server.service.LocalizedResponseMessageService;
 import com.kap.kap_server.dto.ResponseWrapper;
 import lombok.AllArgsConstructor;
@@ -14,7 +13,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import static com.ovesdu.ovesdu_server.config.consts.LocalizedResponseMessageKey.*;
+import static com.kap.kap_server.config.consts.LocalizedResponseMessageKey.*;
 
 
 @EnableWebMvc
