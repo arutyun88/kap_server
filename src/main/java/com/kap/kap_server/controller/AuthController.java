@@ -55,4 +55,17 @@ public class AuthController {
             return AppResponse.error(exception, locale);
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<ResponseWrapper> signIn(
+            @RequestHeader(Headers.APP_LOCALE) String locale,
+            @RequestBody() UserSignInDto userSignInDto
+    ) {
+        try {
+            TokensDto tokens = userService.signIn(userSignInDto);
+            return AppResponse.ok(tokens, locale, LocalizedResponseMessageKey.USER_AUTHORIZED);
+        } catch (Exception exception) {
+            return AppResponse.error(exception, locale);
+        }
+    }
 }

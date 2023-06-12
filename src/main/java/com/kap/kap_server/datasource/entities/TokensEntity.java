@@ -23,6 +23,6 @@ public class TokensEntity extends BaseEntity {
     @ManyToOne(fetch = EAGER)
     private UserEntity user;
 
-    @ManyToOne(fetch = EAGER)
+    @OneToOne(fetch = EAGER)
     private DeviceEntity device;
 }

@@ -16,6 +16,7 @@ public enum LocalizedResponseMessageKey {
     EMAIL_ALREADY_EXIST("Email already exist"),
     PHONE_NUMBER_ALREADY_EXIST("Phone number already exist"),
     DEVICE_ALREADY_EXIST("Device already exist"),
+    USER_AUTHORIZED("The user is authorized"),
     USER_REGISTERED("The user is registered"),
     TOKEN_INVALID("The token is invalid"),
     TOKEN_NOT_VALID("The token is not valid"),
