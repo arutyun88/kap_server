@@ -14,9 +14,9 @@ public interface UserService {
             String deviceId
     ) throws NotFoundException;
 
-    TokensDto createUser(
-            UserCreateDto userCreateDto
-    ) throws AlreadyExistException;
+    TokensDto signUp(UserCreateDto userCreateDto, String timeZone) throws AlreadyExistException;
 
-    TokensDto signIn(UserSignInDto userSignInDto) throws UnauthorizedException, AlreadyExistException;
+    TokensDto signIn(UserSignInDto userSignInDto, String timeZone) throws UnauthorizedException, AlreadyExistException;
+
+    void updateVisit(String username, boolean visitWithAlias) throws UnauthorizedException;
 }

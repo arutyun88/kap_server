@@ -70,7 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
             filterChain.doFilter(request, response);
-        } catch (JWTVerificationException e) {
+        } catch (JWTVerificationException | NullPointerException e) {
             FilterHelper.forbidden(response, TOKEN_INVALID, locale);
         } catch (Exception e) {
             FilterHelper.forbidden(response, UNKNOWN_ERROR, locale);

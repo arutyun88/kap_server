@@ -12,7 +12,6 @@ import com.kap.kap_server.exceptions.UnauthorizedException;
 import com.kap.kap_server.service.DeviceService;
 import com.kap.kap_server.service.TokensService;
 import com.kap.kap_server.service.UserService;
-import com.kap.kap_server.config.security.JwtService;
 import com.kap.kap_server.datasource.entities.enums.DeviceOs;
 import com.kap.kap_server.dto.*;
 import com.kap.kap_server.service.VisitsService;
@@ -21,19 +20,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.TimeZone;
+
 @Service
 @AllArgsConstructor
 @Transactional
 public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
-    private final TokensRepository tokensRepository;
     private final UserRepository userRepository;
     private final DeviceRepository deviceRepository;
     private final PasswordEncoder passwordEncoder;
     private final VisitsService visitsService;
     private final TokensService tokensService;
     private final DeviceService deviceService;
-    private final JwtService jwtService;
 
     @Override
     public String getDisplayName(
@@ -52,7 +51,7 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             if (DeviceOs.getByName(deviceOs) != DeviceOs.WEB) {
                 final DeviceEntity device = deviceRepository.findByDeviceId(deviceId);
-                return device != null && device.getUser() == user ? user.getDisplayName() : value;
+                return device != null && device.getUser() == user ? user.getFirstName() : value;
             } else {
                 return value;
             }
@@ -62,63 +61,71 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TokensDto createUser(
-            UserCreateDto userCreateDto
-    ) throws AlreadyExistException {
-
-        UserEntity fUserEntity = userRepository.findByUsername(userCreateDto.getUser().getUsername());
-        if (fUserEntity != null)
-            throw new AlreadyExistException(LocalizedResponseMessageKey.USERNAME_ALREADY_EXIST.name());
-        fUserEntity = userRepository.findByEmail(userCreateDto.getUser().getEmail());
-        if (fUserEntity != null)
-            throw new AlreadyExistException(LocalizedResponseMessageKey.EMAIL_ALREADY_EXIST.name());
-        fUserEntity = userRepository.findByPhoneNumber(userCreateDto.getUser().getPhoneNumber());
-        if (fUserEntity != null)
-            throw new AlreadyExistException(LocalizedResponseMessageKey.PHONE_NUMBER_ALREADY_EXIST.name());
-
-        DeviceEntity fDeviceEntity = deviceRepository.findByDeviceId(userCreateDto.getDevice().getDeviceId());
-        if (fDeviceEntity != null)
-            throw new AlreadyExistException(LocalizedResponseMessageKey.DEVICE_ALREADY_EXIST.name());
-
-        final RoleEntity roleUser = roleRepository.findByName(Role.ROLE_USER.name());
-        final UserEntity user = userCreateDto.getUser().toEntity(roleUser);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        final UserEntity createdUser = userRepository.save(user);
-
-        final DeviceEntity device = userCreateDto.getDevice().toEntity(createdUser);
-        device.setUser(createdUser);
-        final DeviceEntity createdDevice = deviceRepository.save(device);
-
-        final TokensEntity tokens = jwtService.generateToken(createdUser);
-
-        tokensRepository.save(
-                new TokensEntity(
-                        null,
-                        tokens.getAccessToken(),
-                        tokens.getRefreshToken(),
-                        createdUser,
-                        createdDevice
-                )
+    public TokensDto signUp(UserCreateDto userCreateDto, String timeZone) throws AlreadyExistException {
+        checkUser(userCreateDto);
+        checkDevice(userCreateDto.getDevice().getDeviceId());
+        final UserEntity user = userCreateDto.toEntity(
+                roleRepository.findByName(Role.ROLE_USER.name()),
+                TimeZone.getTimeZone(timeZone)
         );
-
-        return new TokensDto(tokens.getAccessToken(), tokens.getRefreshToken());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        final UserEntity cUser = userRepository.save(user);
+        final var uDevice = deviceService.updateDevice(userCreateDto.getDevice(), cUser);
+        final var uTokens = tokensService.updateTokens(uDevice, cUser);
+        return new TokensDto(uTokens.getAccessToken(), uTokens.getRefreshToken());
     }
 
     @Override
-    public TokensDto signIn(UserSignInDto userSignInDto) throws UnauthorizedException, AlreadyExistException {
-        final var fUserEntity = userRepository.findByUsername(userSignInDto.username());
+    public TokensDto signIn(
+            UserSignInDto userSignInDto, String timeZone
+    ) throws UnauthorizedException, AlreadyExistException {
+        final var fUserEntity = findByUsernameAndPassword(userSignInDto.username(), userSignInDto.password());
+        final var uDeviceEntity = deviceService.updateDevice(userSignInDto.device(), fUserEntity);
+        final var uTokens = tokensService.updateTokens(uDeviceEntity, fUserEntity);
+        updateTimeZone(fUserEntity, timeZone);
+        return new TokensDto(uTokens.getAccessToken(), uTokens.getRefreshToken());
+    }
+
+    @Override
+    public void updateVisit(String username, boolean visitWithAlias) throws UnauthorizedException {
+        visitsService.updateVisit(findByUsername(username), visitWithAlias);
+    }
+
+    private void checkUser(UserCreateDto user) throws AlreadyExistException {
+        if (userRepository.findByUsername(user.getUsername()) != null)
+            throw new AlreadyExistException(LocalizedResponseMessageKey.USERNAME_ALREADY_EXIST.name());
+        if (userRepository.findByEmail(user.getEmail()) != null)
+            throw new AlreadyExistException(LocalizedResponseMessageKey.EMAIL_ALREADY_EXIST.name());
+        if (userRepository.findByPhoneNumber(user.getPhoneNumber()) != null)
+            throw new AlreadyExistException(LocalizedResponseMessageKey.PHONE_NUMBER_ALREADY_EXIST.name());
+    }
+
+    private void checkDevice(String deviceId) throws AlreadyExistException {
+        if (deviceService.checkDevice(deviceId) != null)
+            throw new AlreadyExistException(LocalizedResponseMessageKey.DEVICE_ALREADY_EXIST.name());
+    }
+
+    private UserEntity findByUsername(String username) throws UnauthorizedException {
+        final var fUserEntity = userRepository.findByUsername(username);
         if (fUserEntity == null) {
             throw new UnauthorizedException(LocalizedResponseMessageKey.INVALID_USERNAME_OR_PASSWORD.name());
         }
-        final var mPassword = passwordEncoder.matches(userSignInDto.password(), fUserEntity.getPassword());
+        return fUserEntity;
+    }
+
+    private UserEntity findByUsernameAndPassword(String username, String password) throws UnauthorizedException {
+        final var fUserEntity = findByUsername(username);
+        final var mPassword = passwordEncoder.matches(password, fUserEntity.getPassword());
         if (!mPassword) {
             throw new UnauthorizedException(LocalizedResponseMessageKey.INVALID_USERNAME_OR_PASSWORD.name());
         }
+        return fUserEntity;
+    }
 
-        final var uDeviceEntity = deviceService.updateDevice(userSignInDto.device(), fUserEntity);
-        final var uTokens = tokensService.updateTokens(uDeviceEntity, fUserEntity);
-        visitsService.updateVisit(fUserEntity, userSignInDto.visitWithAlias());
-
-        return new TokensDto(uTokens.getAccessToken(), uTokens.getRefreshToken());
+    private void updateTimeZone(UserEntity user, String timeZone) {
+        if (!user.getTimeZone().getID().equals(timeZone)) {
+            user.setTimeZone(TimeZone.getTimeZone(timeZone));
+            userRepository.save(user);
+        }
     }
 }

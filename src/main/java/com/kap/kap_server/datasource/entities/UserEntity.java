@@ -1,9 +1,7 @@
 package com.kap.kap_server.datasource.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import com.kap.kap_server.datasource.entities.enums.Gender;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.TimeZone;
 
 import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.GenerationType.AUTO;
@@ -30,7 +30,15 @@ public class UserEntity extends BaseEntity implements UserDetails {
     private String alias;
     private String phoneNumber;
     private String email;
-    private String displayName;
+    private String firstName;
+    private String lastName;
+    private String location;
+    @Setter
+    private TimeZone timeZone;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+    @Temporal(TemporalType.DATE)
+    private Date dateOfBirth;
     @Setter
     private String password;
     @ManyToMany(fetch = EAGER)

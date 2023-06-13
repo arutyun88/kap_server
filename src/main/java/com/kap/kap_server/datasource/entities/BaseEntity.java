@@ -10,7 +10,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.Instant;
 
 @Getter
-@Setter
 @MappedSuperclass
 public abstract class BaseEntity {
 
@@ -18,7 +17,8 @@ public abstract class BaseEntity {
     @CreationTimestamp
     private Instant createdAt;
     @UpdateTimestamp
+    @Setter
     private Instant updatedAt;
+    @Setter
     private Instant deletedAt;
-    private boolean deleted;
 }

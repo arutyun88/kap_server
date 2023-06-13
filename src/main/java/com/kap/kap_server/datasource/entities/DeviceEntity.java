@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.GenerationType.AUTO;
@@ -30,10 +29,5 @@ public class DeviceEntity extends BaseEntity {
     private String deviceId;
 
     @ManyToOne(fetch = EAGER)
-    @Setter
     private UserEntity user;
-
-    public static boolean validate(String deviceId, String deviceType, String deviceOs) {
-        return !deviceId.isEmpty() && DeviceOs.validate(deviceOs, DeviceType.getByName(deviceType));
-    }
 }

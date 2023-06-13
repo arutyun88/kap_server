@@ -17,7 +17,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public DeviceEntity updateDevice(DeviceDto deviceDto, UserEntity userEntity) throws AlreadyExistException {
-        final var fDeviceEntity = deviceRepository.findByDeviceId(deviceDto.getDeviceId());
+        final var fDeviceEntity = checkDevice(deviceDto.getDeviceId());
         if (fDeviceEntity == null) {
             return deviceRepository.save(deviceDto.toEntity(userEntity));
         } else {
@@ -26,5 +26,10 @@ public class DeviceServiceImpl implements DeviceService {
             }
         }
         return fDeviceEntity;
+    }
+
+    @Override
+    public DeviceEntity checkDevice(String deviceId) {
+        return  deviceRepository.findByDeviceId(deviceId);
     }
 }

@@ -42,12 +42,13 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<ResponseWrapper> createUser(
+    public ResponseEntity<ResponseWrapper> signUp(
             @RequestHeader(APP_LOCALE) String locale,
+            @RequestHeader(TIME_ZONE) String timeZone,
             @RequestBody() UserCreateDto userCreateDto
     ) {
         try {
-            TokensDto tokens = userService.createUser(userCreateDto);
+            TokensDto tokens = userService.signUp(userCreateDto, timeZone);
             return AppResponse.created(tokens, locale, LocalizedResponseMessageKey.USER_REGISTERED);
         } catch (Exception exception) {
             return AppResponse.error(exception, locale);
@@ -61,7 +62,7 @@ public class AuthController {
             @RequestBody() UserSignInDto userSignInDto
     ) {
         try {
-            TokensDto tokens = userService.signIn(userSignInDto);
+            TokensDto tokens = userService.signIn(userSignInDto, timeZone);
             return AppResponse.ok(tokens, locale, LocalizedResponseMessageKey.USER_AUTHORIZED);
         } catch (Exception exception) {
             return AppResponse.error(exception, locale);

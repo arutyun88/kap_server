@@ -7,4 +7,5 @@ import com.kap.kap_server.exceptions.AlreadyExistException;
 
 public interface DeviceService {
     DeviceEntity updateDevice(DeviceDto deviceDto, UserEntity userEntity) throws AlreadyExistException;
+    DeviceEntity checkDevice(String deviceId);
 }
