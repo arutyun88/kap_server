@@ -106,18 +106,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TokensDto signIn(UserSignInDto userSignInDto) throws UnauthorizedException, AlreadyExistException {
-        final var fUserEntity = userRepository.findByUsername(userSignInDto.getUsername());
+        final var fUserEntity = userRepository.findByUsername(userSignInDto.username());
         if (fUserEntity == null) {
             throw new UnauthorizedException(LocalizedResponseMessageKey.INVALID_USERNAME_OR_PASSWORD.name());
         }
-        final var mPassword = passwordEncoder.matches(userSignInDto.getPassword(), fUserEntity.getPassword());
+        final var mPassword = passwordEncoder.matches(userSignInDto.password(), fUserEntity.getPassword());
         if (!mPassword) {
             throw new UnauthorizedException(LocalizedResponseMessageKey.INVALID_USERNAME_OR_PASSWORD.name());
         }
 
-        final var uDeviceEntity = deviceService.updateDevice(userSignInDto.getDevice(), fUserEntity);
+        final var uDeviceEntity = deviceService.updateDevice(userSignInDto.device(), fUserEntity);
         final var uTokens = tokensService.updateTokens(uDeviceEntity, fUserEntity);
-        visitsService.updateVisit(fUserEntity);
+        visitsService.updateVisit(fUserEntity, userSignInDto.visitWithAlias());
 
         return new TokensDto(uTokens.getAccessToken(), uTokens.getRefreshToken());
     }

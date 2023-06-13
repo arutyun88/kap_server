@@ -15,11 +15,11 @@ public class VisitsServiceImpl implements VisitsService {
     private final VisitsRepository visitsRepository;
 
     @Override
-    public void updateVisit(UserEntity user) {
+    public void updateVisit(UserEntity user, boolean visitWithAlias) {
         final var currentTime = Instant.now();
-        final var fLastVisit = visitsRepository.findByUser(user);
+        final var fLastVisit = visitsRepository.findByUserAndVisitedWithAlias(user, visitWithAlias);
         if (fLastVisit == null) {
-            visitsRepository.save(new VisitsEntity(null, currentTime, user));
+            visitsRepository.save(new VisitsEntity(null, currentTime, visitWithAlias, user));
         } else {
             fLastVisit.setLastVisit(currentTime);
             visitsRepository.save(fLastVisit);

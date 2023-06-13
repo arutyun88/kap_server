@@ -27,6 +27,7 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @GeneratedValue(strategy = AUTO)
     private Long id;
     private String username;
+    private String alias;
     private String phoneNumber;
     private String email;
     private String displayName;

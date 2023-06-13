@@ -1,9 +1,7 @@
 package com.kap.kap_server.controller;
 
 import com.kap.kap_server.config.AppResponse;
-import com.kap.kap_server.config.consts.Headers;
 import com.kap.kap_server.config.consts.LocalizedResponseMessageKey;
-import com.kap.kap_server.config.consts.Paths;
 import com.kap.kap_server.dto.ResponseWrapper;
 import com.kap.kap_server.dto.TokensDto;
 import com.kap.kap_server.dto.UserCreateDto;
@@ -14,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.ovesdu.ovesdu_server.config.consts.Headers.*;
-import static com.ovesdu.ovesdu_server.config.consts.Paths.PATH_AUTH;
+import static com.kap.kap_server.config.consts.Headers.*;
+import static com.kap.kap_server.config.consts.Paths.*;
 
 @RestController
 @RequestMapping(PATH_AUTH)
@@ -58,7 +56,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ResponseWrapper> signIn(
-            @RequestHeader(Headers.APP_LOCALE) String locale,
+            @RequestHeader(APP_LOCALE) String locale,
             @RequestBody() UserSignInDto userSignInDto
     ) {
         try {

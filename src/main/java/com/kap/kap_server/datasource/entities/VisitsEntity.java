@@ -21,6 +21,8 @@ public class VisitsEntity {
     private Long id;
     @Setter
     private Instant lastVisit;
+    @Setter
+    private boolean visitedWithAlias;
 
     @OneToOne(fetch = EAGER)
     private UserEntity user;
