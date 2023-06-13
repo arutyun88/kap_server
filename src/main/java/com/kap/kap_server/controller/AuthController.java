@@ -57,6 +57,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<ResponseWrapper> signIn(
             @RequestHeader(APP_LOCALE) String locale,
+            @RequestHeader(TIME_ZONE) String timeZone,
             @RequestBody() UserSignInDto userSignInDto
     ) {
         try {

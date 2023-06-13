@@ -7,4 +7,5 @@ public abstract class Headers {
     public static final String DEVICE_ID = "device-id";
     public static final String DEVICE_OS = "device-os";
     public static final String APP_LOCALE = "app-locale";
+    public static final String TIME_ZONE = "time-zone";
 }

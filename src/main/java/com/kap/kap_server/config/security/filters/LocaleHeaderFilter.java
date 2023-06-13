@@ -28,9 +28,12 @@ public class LocaleHeaderFilter extends OncePerRequestFilter {
             return;
         }
         String appLocale = request.getHeader(APP_LOCALE);
+        String timeZone = request.getHeader(TIME_ZONE);
 
         if (appLocale == null || appLocale.isEmpty()) {
             FilterHelper.error(response, LocalizedResponseMessageKey.APP_LOCALE_HEADER_REQUIRED, "en");
+        } else if (timeZone == null || timeZone.isEmpty()) {
+            FilterHelper.error(response, LocalizedResponseMessageKey.TIME_ZONE_HEADER_REQUIRED, "en");
         } else {
             filterChain.doFilter(request, response);
         }

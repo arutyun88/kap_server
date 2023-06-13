@@ -4,6 +4,7 @@ public enum LocalizedResponseMessageKey {
     SUCCESS("Success"),
     CREATED("Created"),
     APP_LOCALE_HEADER_REQUIRED("app-locale in the header is required"),
+    TIME_ZONE_HEADER_REQUIRED("time-zone in the header is required"),
     DEVICE_TYPE_HEADER_REQUIRED("device-type in the header is required"),
     DEVICE_ID_HEADER_REQUIRED("device-id in the header is required"),
     DEVICE_OS_HEADER_REQUIRED("device-os in the header is required"),
