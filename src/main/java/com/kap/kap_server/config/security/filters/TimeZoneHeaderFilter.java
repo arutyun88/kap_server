@@ -24,8 +24,8 @@ public class TimeZoneHeaderFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        if (!request.getServletPath().startsWith(PATH_AUTH + PATH_LOGIN) &&
-                !request.getServletPath().startsWith(PATH_AUTH + PATH_REGISTRATION)
+        if (!request.getServletPath().startsWith(PATH_AUTH_LOGIN) &&
+                !request.getServletPath().startsWith(PATH_AUTH_REGISTRATION)
         ) {
             filterChain.doFilter(request, response);
             return;

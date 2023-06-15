@@ -16,13 +16,12 @@ import static com.kap.kap_server.config.consts.Headers.*;
 import static com.kap.kap_server.config.consts.Paths.*;
 
 @RestController
-@RequestMapping(PATH_AUTH)
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
     final UserService userService;
 
-    @GetMapping("/info/{usernameOrEmailOrPhoneNumber}")
+    @GetMapping(PATH_AUTH_INFO + "/{usernameOrEmailOrPhoneNumber}")
     public ResponseEntity<ResponseWrapper> getDisplayName(
             @RequestHeader(APP_LOCALE) String locale,
             @RequestHeader(DEVICE_ID) String deviceId,
@@ -41,7 +40,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping(PATH_REGISTRATION)
+    @PostMapping(PATH_AUTH_REGISTRATION)
     public ResponseEntity<ResponseWrapper> signUp(
             @RequestHeader(APP_LOCALE) String locale,
             @RequestHeader(TIME_ZONE) String timeZone,
@@ -55,7 +54,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping(PATH_LOGIN)
+    @PostMapping(PATH_AUTH_LOGIN)
     public ResponseEntity<ResponseWrapper> signIn(
             @RequestHeader(APP_LOCALE) String locale,
             @RequestHeader(TIME_ZONE) String timeZone,
