@@ -35,11 +35,7 @@ public class UserServiceImpl implements UserService {
     private final DeviceService deviceService;
 
     @Override
-    public String getDisplayName(
-            String value,
-            String deviceOs,
-            String deviceId
-    ) throws NotFoundException {
+    public String getDisplayName(String value, DeviceDto deviceDto) throws NotFoundException {
         final UserEntity user;
         if (value.startsWith("+")) {
             user = userRepository.findByPhoneNumber(value);
@@ -49,8 +45,8 @@ public class UserServiceImpl implements UserService {
             user = userRepository.findByUsername(value);
         }
         if (user != null) {
-            if (DeviceOs.getByName(deviceOs) != DeviceOs.WEB) {
-                final DeviceEntity device = deviceRepository.findByDeviceId(deviceId);
+            if (DeviceOs.getByName(deviceDto.getDeviceOs()) != DeviceOs.WEB) {
+                final DeviceEntity device = deviceRepository.findByDeviceId(deviceDto.getDeviceId());
                 return device != null && device.getUser() == user ? user.getFirstName() : value;
             } else {
                 return value;

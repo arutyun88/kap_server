@@ -8,11 +8,7 @@ import com.kap.kap_server.exceptions.NotFoundException;
 import com.kap.kap_server.exceptions.UnauthorizedException;
 
 public interface UserService {
-    String getDisplayName(
-            String value,
-            String deviceOs,
-            String deviceId
-    ) throws NotFoundException;
+    String getDisplayName(String value, DeviceDto deviceDto) throws NotFoundException;
 
     TokensDto signUp(UserCreateDto userCreateDto, String timeZone) throws AlreadyExistException;
 
