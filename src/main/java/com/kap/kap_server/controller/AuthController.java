@@ -41,7 +41,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/registration")
+    @PostMapping(PATH_REGISTRATION)
     public ResponseEntity<ResponseWrapper> signUp(
             @RequestHeader(APP_LOCALE) String locale,
             @RequestHeader(TIME_ZONE) String timeZone,
@@ -55,7 +55,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping(PATH_LOGIN)
     public ResponseEntity<ResponseWrapper> signIn(
             @RequestHeader(APP_LOCALE) String locale,
             @RequestHeader(TIME_ZONE) String timeZone,

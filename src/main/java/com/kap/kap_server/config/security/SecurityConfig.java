@@ -3,6 +3,7 @@ package com.kap.kap_server.config.security;
 import com.kap.kap_server.config.consts.Role;
 import com.kap.kap_server.config.security.filters.LocaleHeaderFilter;
 import com.kap.kap_server.config.security.filters.JwtAuthenticationFilter;
+import com.kap.kap_server.config.security.filters.TimeZoneHeaderFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig {
     private final LocaleHeaderFilter localeHeaderFilter;
     private final JwtAuthenticationFilter jwtAuthFilter;
+    private final TimeZoneHeaderFilter timeZoneHeaderFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -34,7 +36,8 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(localeHeaderFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(timeZoneHeaderFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
