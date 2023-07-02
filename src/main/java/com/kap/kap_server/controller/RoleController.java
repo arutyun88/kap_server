@@ -9,8 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.ovesdu.ovesdu_server.config.consts.Headers.APP_LOCALE;
-import static com.ovesdu.ovesdu_server.config.consts.Paths.PATH_ROLES;
+import static com.kap.kap_server.config.consts.Paths.PATH_ROLES;
 
 @RestController
 @RequestMapping(PATH_ROLES)
@@ -20,7 +19,7 @@ public class RoleController {
 
     @PutMapping("/user")
     public ResponseEntity<ResponseWrapper> addNewRole(
-            @RequestHeader(APP_LOCALE) String locale,
+            @RequestHeader(Headers.APP_LOCALE) String locale,
             @RequestParam String username,
             @RequestParam String role
     ) {
