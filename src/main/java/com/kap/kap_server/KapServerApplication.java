@@ -9,6 +9,7 @@ import com.kap.kap_server.datasource.local.LocalizedResponseMessageRepository;
 import com.kap.kap_server.datasource.local.RoleRepository;
 import com.kap.kap_server.datasource.entities.UserEntity;
 import com.kap.kap_server.datasource.local.UserRepository;
+import com.kap.kap_server.service.SmsService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,12 +26,16 @@ public class KapServerApplication {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final SmsService smsService;
+
     public KapServerApplication(RoleRepository roleRepository,
                                 UserRepository userRepository,
-                                PasswordEncoder passwordEncoder) {
+                                PasswordEncoder passwordEncoder,
+                                SmsService smsService) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.smsService = smsService;
     }
 
     public static void main(String[] args) {
@@ -84,6 +89,9 @@ public class KapServerApplication {
             localizedResponseMessageRepository.save(
                     new LocalizedResponseMessageEntity(null, "ru", LocalizedResponseMessageKey.USER_REGISTERED, "Пользователь зарегистрирован")
             );
+
+//            smsService.sendAuthorizationCode("+79202024422");
+//            smsService.sendAuthorizationCode("+37455816382");
 
         };
     }

@@ -2,6 +2,10 @@
 - **Controllers**
   - **AuthController**
     - Восстановление пароля
+    - **/registration POST**: отправка смс-сообщения с кодом регистрации;
+    - **/registration POST**: отправка email-сообщения с кодом регистрации;
+    - **/login POST**: отправка смс-сообщения с кодом регистрации;
+    - **/login POST**: отправка email-сообщения с кодом регистрации;
 
 ### In Progress
 - **Services**

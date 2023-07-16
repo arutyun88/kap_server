@@ -22,3 +22,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 app:
   secret-key: ${SECRET_KEY}
+message:
+  smsc:
+    login: ${MESSAGE_SMSC_LOGIN}
+    password: ${MESSAGE_SMSC_PASSWORD}
