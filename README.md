@@ -2,9 +2,7 @@
 - **Controllers**
   - **AuthController**
     - Восстановление пароля
-    - **/registration POST**: отправка смс-сообщения с кодом регистрации;
     - **/registration POST**: отправка email-сообщения с кодом регистрации;
-    - **/login POST**: отправка смс-сообщения с кодом регистрации;
     - **/login POST**: отправка email-сообщения с кодом регистрации;
 
 ### In Progress
@@ -14,6 +12,9 @@
 - **Controllers**
   - **RoleController**
     - **/user PUT** добавление новой роли существующему пользователю;
+  - **AuthController**
+    - **/registration POST**: отправка смс-сообщения с кодом регистрации (messente с пакетом из maven или smsaero);
+    - **/login POST**: отправка смс-сообщения с кодом регистрации (messente с пакетом из maven или smsaero);
 - **Entities**
 - **Enums**
 - **Dto**
